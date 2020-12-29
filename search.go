@@ -25,13 +25,14 @@ const (
 	PaginationPath = "//*[starts-with(@class, 'pagination')]/a[contains(@class, 'pagination__link--next')]/@href"
 )
 
-//Result is a search result
-type Result struct {
+//Teaser is a search result
+type Teaser struct {
 	Title     string
 	Link      string
 	Image     string
 	IsPremium bool
 	Published time.Time
+	Query     string //The search query used to get the teaser
 }
 
 //DatePathSegment is the regexp for date in the URL Path
@@ -41,9 +42,9 @@ var DatePathSegment = regexp.MustCompile(`\d\d\d\d-\d\d-\d\d`)
 var BaseURL, _ = url.Parse("https://www.sydsvenskan.se/")
 
 //Search sends a query and returns result iterator (channel)
-func Search(q string) chan Result {
+func Search(q string) chan Teaser {
 
-	results := make(chan Result)
+	results := make(chan Teaser)
 
 	go func() {
 
@@ -61,7 +62,8 @@ func Search(q string) chan Result {
 
 			for _, t := range htmlquery.Find(doc, ResultsPath) {
 
-				result := Result{}
+				result := Teaser{}
+				result.Query = q
 
 				href := htmlquery.FindOne(t, LinkPath)
 				if href != nil {
