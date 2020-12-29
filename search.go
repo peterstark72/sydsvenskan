@@ -31,7 +31,7 @@ type Result struct {
 	Link      string
 	Image     string
 	IsPremium bool
-	PubDate   time.Time
+	Published time.Time
 }
 
 //DatePathSegment is the regexp for date in the URL Path
@@ -69,7 +69,7 @@ func Search(q string) chan Result {
 					result.Link = BaseURL.ResolveReference(hrefURL).String()
 
 					d := DatePathSegment.FindString(result.Link)
-					result.PubDate, _ = time.Parse("2006-01-02", d)
+					result.Published, _ = time.Parse("2006-01-02", d)
 				}
 				h := htmlquery.FindOne(t, HeadingPath)
 				if h != nil {
