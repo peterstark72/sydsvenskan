@@ -1,12 +1,19 @@
 package sydsvenskan
 
 import (
-	"fmt"
 	"testing"
 )
 
-func TestSearch(t *testing.T) {
-	for itm := range Search("Tygelsjö") {
-		fmt.Printf("%+v\n", itm)
+func TestNewsday(t *testing.T) {
+
+	feed, err := GetNewsdayFeed()
+	if err != nil {
+		t.Error(err)
+		return
 	}
+	if len(feed) == 0 {
+		t.Error("No articles found!?!")
+		return
+	}
+
 }
